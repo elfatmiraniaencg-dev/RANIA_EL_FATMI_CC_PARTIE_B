@@ -1,6 +1,6 @@
 # Analyse Prédictive d'un Produit Bancaire à Termes
 
-**Auteur** : [Votre Nom]  
+**Auteur** : RANIA EL FATMI 
 **Dataset** : Bank Marketing - UCI Machine Learning Repository  
 **Date** : Décembre 2024
 
