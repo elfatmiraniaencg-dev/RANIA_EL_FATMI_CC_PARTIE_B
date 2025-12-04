@@ -1,9 +1,9 @@
-🧪 Rapport Scientifique
+##🧪 Rapport Scientifique
 Analyse Prédictive d’un Produit Bancaire à Termes
 
 Auteur : Rania El Fatmi
 
-📍 1. Introduction
+##📍 1. Introduction
 1.1 Contexte général
 
 Dans l’environnement bancaire moderne, la capacité à identifier les clients susceptibles de souscrire à un produit financier constitue un avantage stratégique majeur. Les établissements cherchent à optimiser leurs campagnes marketing, réduire leurs coûts et augmenter leur taux de conversion.
@@ -41,7 +41,7 @@ analyser les erreurs via la matrice de confusion ;
 
 proposer des pistes d'amélioration pour un modèle plus performant.
 
-🛠️ 2. Méthodologie
+##🛠️ 2. Méthodologie
 2.1 Nettoyage des données
 
 Chaque étape du cleaning a été réalisée pour une raison précise :
@@ -104,7 +104,7 @@ Utile lorsque les données sont bien standardisées
 Peut capturer des frontières non linéaires
 ➡️ Bon modèle mais coûteux computationnellement.
 
-📊 3. Résultats & Discussion
+##📊 3. Résultats & Discussion
 3.1 Comparaison des métriques
 
 Les modèles ont été évalués via 4 indicateurs :
@@ -162,7 +162,7 @@ présentant un comportement instable dans les appels marketing ;
 
 dans des groupes socio-économiques sous-représentés.
 
-🧭 4. Conclusion
+##🧭 4. Conclusion
 4.1 Synthèse
 
 L’étude montre que les algorithmes de boosting sont les plus adaptés pour prédire la souscription à un dépôt à terme. Le traitement approprié des données (nettoyage, encodage, équilibrage) a fortement influencé la qualité des résultats.
