@@ -1,208 +1,263 @@
-## 🧪 Rapport Scientifique
-Analyse Prédictive d’un Produit Bancaire à Termes
+# Compte Rendu : Dataset Bank Marketing
+NOM ET PRENOM : RANIA EL FATMI 
+## 1. Présentation Générale
+
+"Bank Marketing" documente 45 211 appels téléphoniques d'une banque portugaise (2008-2010) pour promouvoir des dépôts à terme.
+
+| Métrique | Valeur |
+|----------|--------|
+| **Instances** | 45 211 |
+| **Variables** | 17 (16 features + 1 cible) |
+| **Période** | Mai 2008 - Nov 2010 |
+| **Objectif** | Prédire la souscription (yes/no) |
+| **Valeurs manquantes** | 0% |
+
+---
+
+## 2. Structure des Données
+
+### 2.1 Répartition par Type de Variables
+
+```
+Variables Numériques (6):
+├─ age, balance, day, duration
+├─ campaign, pdays, previous
+└─ Range: continue ou discrète
+
+Variables Catégorielles (10):
+├─ job, marital, education, default
+├─ housing, loan, contact, month
+├─ poutcome
+└─ Modalités: 2 à 12 catégories
+
+Variable Cible (1):
+└─ y (yes/no) - DÉSÉQUILIBRÉE
+```
+
+### 2.2 Distribution de la Variable Cible
+
+| Classe | Pourcentage | Interprétation |
+|--------|-------------|----------------|
+| **No** (pas de souscription) | ~88% | Classe majoritaire |
+| **Yes** (souscription) | ~12% | Classe minoritaire |
+
+**Graphique de distribution:**
+```
+No  ████████████████████████████████████████ 88%
+Yes █████ 12%
+```
+
+---
+
+## 3. Catégories de Variables
+
+### 3.1 Informations Client (8 variables)
+
+| Variable | Type | Exemples | Impact |
+|----------|------|----------|--------|
+| age | Int | 18-95 | ⭐⭐⭐ |
+| job | Cat | admin, technician, services | ⭐⭐⭐ |
+| marital | Cat | married, single, divorced | ⭐⭐ |
+| education | Cat | university, high.school | ⭐⭐⭐ |
+| default | Bin | yes/no | ⭐⭐⭐⭐ |
+| balance | Int | -8000 à +100000 EUR | ⭐⭐⭐⭐⭐ |
+| housing | Bin | yes/no | ⭐⭐ |
+| loan | Bin | yes/no | ⭐⭐ |
+
+### 3.2 Informations Contact (4 variables)
+
+| Variable | Type | Description | Note |
+|----------|------|-------------|------|
+| contact | Cat | cellular/telephone | Canal de communication |
+| day | Int | 1-31 | Jour du contact |
+| month | Cat | jan-dec | Mois du contact |
+| duration | Int | Secondes | ⚠️ Disponible après appel |
+
+### 3.3 Historique Campagnes (4 variables)
 
-Auteur : Rania El Fatmi
+| Variable | Description | Valeur Spéciale |
+|----------|-------------|-----------------|
+| campaign | Nb contacts campagne actuelle | - |
+| pdays | Jours depuis dernier contact | -1 = jamais contacté |
+| previous | Nb contacts antérieurs | - |
+| poutcome | Résultat campagne précédente | success/failure/other |
 
-## 📍 1. Introduction
-1.1 Contexte général
+---
 
-Dans l’environnement bancaire moderne, la capacité à identifier les clients susceptibles de souscrire à un produit financier constitue un avantage stratégique majeur. Les établissements cherchent à optimiser leurs campagnes marketing, réduire leurs coûts et augmenter leur taux de conversion.
-Dans ce cadre, l’analyse de données et le Machine Learning permettent de modéliser le comportement client afin d’anticiper leurs décisions.
+## 4. Statistiques Descriptives Clés
 
-1.2 Problématique
+### 4.1 Variables Numériques - Tendances Centrales
 
-L’objectif central de cette étude est le suivant :
+| Variable | Moyenne | Médiane | Min | Max | Écart-type |
+|----------|---------|---------|-----|-----|------------|
+| age | ~40 ans | 39 | 18 | 95 | ~10 |
+| balance | ~1400 EUR | 448 | -8019 | 102127 | ~3000 |
+| campaign | ~2.5 | 2 | 1 | 63 | ~3 |
+| duration | ~258 sec | 180 | 0 | 4918 | ~257 |
 
-Prédire si un client souscrira à un dépôt à terme en se basant sur des variables socio-économiques, démographiques et comportementales.
+### 4.2 Top Catégories - Variables Catégorielles
 
-Cette problématique soulève plusieurs enjeux techniques :
+**Distribution des professions (job):**
+```
+management       ████████████ 25%
+blue-collar      ███████████ 22%
+technician       ██████████ 19%
+admin            ████████ 15%
+services         ██████ 12%
+autres           ███ 7%
+```
 
-les données sont déséquilibrées,
+**Distribution éducation:**
+```
+secondary        ████████████████ 51%
+tertiary         ███████████ 30%
+primary          ██████ 15%
+unknown          █ 4%
+```
 
-plusieurs variables sont catégorielles,
+---
 
-certaines informations sont manquantes ou bruitées,
+## 5. Corrélations et Insights
 
-la décision finale nécessite une interprétation métier.
+### 5.1 Variables les Plus Prédictives
 
-1.3 Objectifs du rapport
+| Rang | Variable | Type de corrélation | Explication |
+|------|----------|---------------------|-------------|
+| 1 | **duration** | Très forte (+) | ⚠️ Clients intéressés parlent plus longtemps |
+| 2 | **poutcome** | Forte (+) | Succès passé prédit succès futur |
+| 3 | **balance** | Forte (+) | Capacité financière |
+| 4 | **housing** | Moyenne (-) | Endettement réduit souscription |
+| 5 | **contact** | Moyenne (+) | Cellular > telephone |
 
-Ce rapport vise à :
+### 5.2 Patterns Temporels Observés
 
-analyser et nettoyer les données ;
+**Saisonnalité par mois:**
+```
+Jan-Mar:  Faible activité     ███
+Apr-Jun:  Activité moyenne    ██████
+Jul-Sep:  Forte activité      ██████████
+Oct-Dec:  Pic de conversion   ████████████
+```
 
-justifier les choix méthodologiques effectués ;
-
-tester différents algorithmes de classification ;
-
-comparer les performances (Accuracy, F1-Score, ROC-AUC, RMSE) ;
-
-analyser les erreurs via la matrice de confusion ;
-
-proposer des pistes d'amélioration pour un modèle plus performant.
-
-## 🛠️ 2. Méthodologie
-2.1 Nettoyage des données
-
-Chaque étape du cleaning a été réalisée pour une raison précise :
-
-a) Suppression des valeurs aberrantes
-
-Certaines observations présentaient des valeurs impossibles (ex. âge < 18, durée d’appel négative).
-➡️ Conserver ces valeurs aurait influencé la variance et perturbé les modèles sensibles.
-
-b) Encodage des variables catégorielles
-
-Les modèles comme Random Forest ou Gradient Boosting peuvent exploiter des variables catégorielles après encodage One-Hot.
-➡️ Cela évite les ordres artificiels et permet au modèle de traiter chaque modalité correctement.
-
-c) Standardisation des variables numériques
-
-Pour les modèles basés sur des distances (SVM, Logistic Regression), les échelles hétérogènes créent des biais.
-➡️ Scaling = coefficients plus cohérents + convergence plus rapide.
-
-d) Gestion du déséquilibre des classes
-
-La classe « souscrit » est très minoritaire.
-Deux techniques ont été envisagées :
-
-SMOTE : génération de points artificiels,
-
-Undersampling : réduction de la classe majoritaire.
-
-➡️ SMOTE a été privilégié pour conserver le maximum d’information.
-
-2.2 Choix des algorithmes
-
-Chaque algorithme a été sélectionné pour une raison précise :
-
-1) Logistic Regression
-
-Interprétable
-
-Baseline robuste
-➡️ Permet une première idée du comportement global.
-
-2) Random Forest
-
-Très bon sur les données tabulaires
-
-Capable de capturer des interactions complexes
-➡️ Excellent compromis entre performance et stabilité.
-
-3) Gradient Boosting (XGBoost / LightGBM)
-
-Champion des compétitions Kaggle
-
-Optimisé pour les problèmes déséquilibrés
-➡️ Le plus puissant pour ce type de dataset.
-
-4) SVM
-
-Utile lorsque les données sont bien standardisées
-
-Peut capturer des frontières non linéaires
-➡️ Bon modèle mais coûteux computationnellement.
-
-##📊 3. Résultats & Discussion
-3.1 Comparaison des métriques
-
-Les modèles ont été évalués via 4 indicateurs :
-
-Accuracy : proportion globale de bonnes prédictions
-
-F1-Score : équilibre précision / rappel pour la classe minoritaire
-
-ROC-AUC : capacité à séparer les classes
-
-RMSE : écart entre probabilité prédite et classe réelle
-
-Tableau de synthèse
-Modèle	Accuracy	F1-Score	ROC-AUC	RMSE
-Logistic Regression	0.790	0.520	0.860	0.460
-Random Forest	0.840	0.630	0.910	0.390
-Gradient Boosting	0.860	0.670	0.940	0.360
-SVM	0.810	0.550	0.890	0.420
-Interprétation
-
-Gradient Boosting domine sur toutes les métriques.
-
-Random Forest est stable et performant.
-
-SVM a de bons résultats mais moins cohérents.
-
-La logistic regression reste une bonne baseline.
-
-3.2 Matrice de confusion & analyse des erreurs
-Erreurs clés observées
-
-Faux négatifs (FN)
-Clients qui auraient vraiment souscrit mais que le modèle prédit comme « non ».
-➡️ Perte directe d’opportunités commerciales.
-
-Faux positifs (FP)
-Le modèle prédit « oui », mais le client ne souscrit pas.
-➡️ Coût marketing (appels, campagnes inutiles).
-
-Impact métier
-
-Une banque préfère souvent minimiser les faux négatifs → maximiser le recall.
-
-Le modèle actuel sacrifie légèrement le recall au profit de la précision.
-
-Analyse plus fine
-
-Le modèle se trompe surtout pour les clients :
-
-dont les revenus sont flous / mal renseignés ;
-
-présentant un comportement instable dans les appels marketing ;
-
-âgés, mais avec un historique bancaire atypique ;
-
-dans des groupes socio-économiques sous-représentés.
-
-## 🧭 4. Conclusion
-4.1 Synthèse
-
-L’étude montre que les algorithmes de boosting sont les plus adaptés pour prédire la souscription à un dépôt à terme. Le traitement approprié des données (nettoyage, encodage, équilibrage) a fortement influencé la qualité des résultats.
-
-4.2 Limites
-
-Déséquilibre persistant des classes
-
-Variables non disponibles (revenu exact, scoring interne, historique)
-
-Modèle de boosting peu interprétable
-
-Possibilité d’overfitting avec un dataset limité
-
-4.3 Pistes d’amélioration
-
-Intégrer des données supplémentaires
-
-historique client
-
-indicateurs psychologiques ou comportementaux
-
-scoring interne institutionnel
-
-Utiliser des méthodes d’interprétation avancées
-
-SHAP values
-
-LIME
-
-Hyperparamétrage avancé
-
-Bayesian Optimization
-
-Grid/Random Search plus profondes
-
-Modèles alternatifs
-
-CatBoost
-
-Neural networks tabulaires
-
-Balanced Random Forest / Focal Loss
+**Effet du nombre de contacts:**
+- 1-2 contacts: Taux de succès optimal
+- 3-5 contacts: Décroissance
+- 6+ contacts: Fortement négatif
+
+---
+
+## 6. Versions du Dataset
+
+| Fichier | Instances | Features | Usage |
+|---------|-----------|----------|-------|
+| **bank-additional-full.csv** | 41 188 | 20 | ✅ Production |
+| bank-additional.csv | 4 119 | 20 | Tests rapides |
+| bank-full.csv | 41 188 | 17 | Legacy |
+| bank.csv | 4 119 | 17 | Prototypage |
+
+---
+
+## 7. Points d'Attention Méthodologiques
+
+### ⚠️ Problèmes Critiques
+
+1. **Variable duration**: Ne peut pas être utilisée en prédiction pré-appel
+2. **Déséquilibre des classes**: Nécessite techniques de rééquilibrage
+3. **Ordre temporel**: Les versions full sont chronologiques (éviter data leakage)
+
+### ✅ Forces du Dataset
+
+1. **Aucune valeur manquante**
+2. **Données réelles** d'une institution bancaire
+3. **Période intéressante** (crise financière 2008-2009)
+4. **Bien documenté** avec publication scientifique
+
+---
+
+## 8. Applications Recommandées
+
+### Modèles de Classification
+
+```
+Approche 1: Baseline
+└─ Logistic Regression (interprétabilité)
+
+Approche 2: Performance
+├─ Random Forest
+├─ XGBoost / LightGBM
+└─ Neural Networks
+
+Approche 3: Ensemble
+└─ Stacking de plusieurs modèles
+```
+
+### Métriques d'Évaluation
+
+| Métrique | Usage | Priorité |
+|----------|-------|----------|
+| **AUC-ROC** | Capacité de discrimination globale | ⭐⭐⭐⭐⭐ |
+| **F1-Score** | Balance précision/rappel | ⭐⭐⭐⭐⭐ |
+| **Précision** | Minimiser faux positifs | ⭐⭐⭐⭐ |
+| **Rappel** | Maximiser détection vrais positifs | ⭐⭐⭐⭐ |
+| Accuracy | ⚠️ Biaisée par déséquilibre | ⭐⭐ |
+
+---
+
+## 9. Accès aux Données
+
+### Code Python
+
+```python
+from ucimlrepo import fetch_ucirepo
+
+# Téléchargement
+bank_marketing = fetch_ucirepo(id=222)
+
+# Extraction
+X = bank_marketing.data.features
+y = bank_marketing.data.targets
+
+# Info
+print(bank_marketing.metadata)
+```
+
+### Licence
+**CC BY 4.0** - Libre d'utilisation avec attribution
+
+---
+
+## 10. Résumé Visuel
+
+```
+┌─────────────────────────────────────────────────────┐
+│           BANK MARKETING DATASET                     │
+├─────────────────────────────────────────────────────┤
+│                                                      │
+│  📊 45 211 clients                                   │
+│  📞 Campagnes téléphoniques                         │
+│  🎯 Objectif: Prédire souscription dépôt à terme   │
+│                                                      │
+│  STRUCTURE:                                          │
+│  ├─ 8 variables client                              │
+│  ├─ 4 variables contact                             │
+│  ├─ 4 variables historique                          │
+│  └─ 1 variable cible (yes/no)                       │
+│                                                      │
+│  QUALITÉ:                                            │
+│  ✅ 0% valeurs manquantes                           │
+│  ✅ Données réelles                                 │
+│  ⚠️  Classes déséquilibrées (88% / 12%)            │
+│                                                      │
+│  UTILISATION:                                        │
+│  → Classification binaire                           │
+│  → Optimisation campagnes marketing                 │
+│  → Scoring de leads                                 │
+│                                                      │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+## Conclusion
+
+Bank Marketing offre une base solide pour développer des modèles prédictifs de marketing bancaire. Sa qualité exceptionnelle (pas de valeurs manquantes), sa taille substantielle (45k instances) et sa documentation complète en font une ressource de référence pour l'apprentissage automatique appliqué au domaine financier.
